@@ -67,7 +67,10 @@ void handleThread(gpointer data)
 	pThreadHandle trHandle = (pThreadHandle)data;
 	gtk_widget_set_sensitive(lookup_widget(mainWindow, "btnGenerate"), FALSE);
 	progBar.isJob = TRUE;
-	convert(trHandle->input, trHandle->output, trHandle->title, trHandle->code, trHandle->complevel);
+	char *msg = convert(trHandle->input, trHandle->output, trHandle->title, trHandle->code, trHandle->complevel);
+	if(msg) {
+		createError(msg);
+	}
 	progBar.isJob = FALSE;
 	gtk_widget_set_sensitive(lookup_widget(mainWindow, "btnGenerate"), TRUE);
 }

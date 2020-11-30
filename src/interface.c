@@ -33,16 +33,18 @@ create_mainWindow (void)
   GtkWidget *fixedGrid;
   GtkObject *compRate_adj;
   GtkWidget *compRate;
-  GtkWidget *compRateLbl;
   GtkWidget *cdImgLbl;
+  GtkWidget *cnvProgress;
+  GtkWidget *cdImg;
+  GtkWidget *exitBtn;
+  GtkWidget *btnGenerate;
+  GtkWidget *label1;
+  GtkWidget *outputDir;
   GtkWidget *gameListScroll;
   GtkWidget *gameList;
-  GtkWidget *cnvProgress;
-  GtkWidget *label1;
-  GtkWidget *exitBtn;
-  GtkWidget *outputDir;
-  GtkWidget *cdImg;
-  GtkWidget *btnGenerate;
+  GtkWidget *compRateLbl;
+  GtkWidget *searchEdit;
+  GtkWidget *label2;
   GtkAccelGroup *accel_group;
 
   accel_group = gtk_accel_group_new ();
@@ -58,6 +60,7 @@ create_mainWindow (void)
   gtk_widget_set_name (fixedGrid, "fixedGrid");
   gtk_widget_show (fixedGrid);
   gtk_container_add (GTK_CONTAINER (mainWindow), fixedGrid);
+  gtk_widget_set_size_request (fixedGrid, 320, 580);
   gtk_container_set_border_width (GTK_CONTAINER (fixedGrid), 4);
 
   compRate_adj = gtk_adjustment_new (4, 0, 9, 1, 1, 1);
@@ -68,13 +71,6 @@ create_mainWindow (void)
   gtk_widget_set_size_request (compRate, 56, 27);
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (compRate), TRUE);
 
-  compRateLbl = gtk_label_new (_("Compression Rate"));
-  gtk_widget_set_name (compRateLbl, "compRateLbl");
-  gtk_widget_show (compRateLbl);
-  gtk_fixed_put (GTK_FIXED (fixedGrid), compRateLbl, 0, 40);
-  gtk_widget_set_size_request (compRateLbl, 124, 26);
-  gtk_misc_set_alignment (GTK_MISC (compRateLbl), 0, 0.5);
-
   cdImgLbl = gtk_label_new (_("CD Image File"));
   gtk_widget_set_name (cdImgLbl, "cdImgLbl");
   gtk_widget_show (cdImgLbl);
@@ -82,50 +78,11 @@ create_mainWindow (void)
   gtk_widget_set_size_request (cdImgLbl, 124, 26);
   gtk_misc_set_alignment (GTK_MISC (cdImgLbl), 0, 0.5);
 
-  gameListScroll = gtk_scrolled_window_new (NULL, NULL);
-  gtk_widget_set_name (gameListScroll, "gameListScroll");
-  gtk_widget_show (gameListScroll);
-  gtk_fixed_put (GTK_FIXED (fixedGrid), gameListScroll, 0, 72);
-  gtk_widget_set_size_request (gameListScroll, 308, 204);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (gameListScroll), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-  gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (gameListScroll), GTK_SHADOW_IN);
-
-  gameList = gtk_tree_view_new ();
-  gtk_widget_set_name (gameList, "gameList");
-  gtk_widget_show (gameList);
-  gtk_container_add (GTK_CONTAINER (gameListScroll), gameList);
-  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (gameList), TRUE);
-
   cnvProgress = gtk_progress_bar_new ();
   gtk_widget_set_name (cnvProgress, "cnvProgress");
   gtk_widget_show (cnvProgress);
-  gtk_fixed_put (GTK_FIXED (fixedGrid), cnvProgress, 0, 324);
+  gtk_fixed_put (GTK_FIXED (fixedGrid), cnvProgress, 0, 504);
   gtk_widget_set_size_request (cnvProgress, 310, 24);
-
-  label1 = gtk_label_new (_("Output directory"));
-  gtk_widget_set_name (label1, "label1");
-  gtk_widget_show (label1);
-  gtk_fixed_put (GTK_FIXED (fixedGrid), label1, 0, 288);
-  gtk_widget_set_size_request (label1, 124, 24);
-  gtk_misc_set_alignment (GTK_MISC (label1), 0, 0.5);
-
-  exitBtn = gtk_button_new_from_stock ("gtk-quit");
-  gtk_widget_set_name (exitBtn, "exitBtn");
-  gtk_widget_show (exitBtn);
-  gtk_fixed_put (GTK_FIXED (fixedGrid), exitBtn, 0, 354);
-  gtk_widget_set_size_request (exitBtn, 110, 36);
-  gtk_widget_add_accelerator (exitBtn, "clicked", accel_group,
-                              GDK_Q, (GdkModifierType) GDK_MOD1_MASK,
-                              GTK_ACCEL_VISIBLE);
-
-  outputDir = gtk_file_chooser_button_new ("Select output directory", GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
-  gtk_widget_set_name (outputDir, "outputDir");
-  gtk_widget_show (outputDir);
-  gtk_fixed_put (GTK_FIXED (fixedGrid), outputDir, 128, 284);
-  gtk_widget_set_size_request (outputDir, 178, 32);
-  g_object_set (outputDir,
-                "local-only", FALSE,
-                NULL);
 
   cdImg = gtk_file_chooser_button_new ("Select A CD Image", GTK_FILE_CHOOSER_ACTION_OPEN);
   gtk_widget_set_name (cdImg, "cdImg");
@@ -136,12 +93,71 @@ create_mainWindow (void)
                 "local-only", FALSE,
                 NULL);
 
+  exitBtn = gtk_button_new_from_stock ("gtk-quit");
+  gtk_widget_set_name (exitBtn, "exitBtn");
+  gtk_widget_show (exitBtn);
+  gtk_fixed_put (GTK_FIXED (fixedGrid), exitBtn, 0, 536);
+  gtk_widget_set_size_request (exitBtn, 110, 36);
+  gtk_widget_add_accelerator (exitBtn, "clicked", accel_group,
+                              GDK_Q, (GdkModifierType) GDK_MOD1_MASK,
+                              GTK_ACCEL_VISIBLE);
+
   btnGenerate = gtk_button_new_from_stock ("gtk-convert");
   gtk_widget_set_name (btnGenerate, "btnGenerate");
   gtk_widget_show (btnGenerate);
-  gtk_fixed_put (GTK_FIXED (fixedGrid), btnGenerate, 200, 354);
+  gtk_fixed_put (GTK_FIXED (fixedGrid), btnGenerate, 200, 536);
   gtk_widget_set_size_request (btnGenerate, 110, 36);
   gtk_button_set_relief (GTK_BUTTON (btnGenerate), GTK_RELIEF_HALF);
+
+  label1 = gtk_label_new (_("Output directory"));
+  gtk_widget_set_name (label1, "label1");
+  gtk_widget_show (label1);
+  gtk_fixed_put (GTK_FIXED (fixedGrid), label1, 0, 464);
+  gtk_widget_set_size_request (label1, 124, 24);
+  gtk_misc_set_alignment (GTK_MISC (label1), 0, 0.5);
+
+  outputDir = gtk_file_chooser_button_new ("Select output directory", GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
+  gtk_widget_set_name (outputDir, "outputDir");
+  gtk_widget_show (outputDir);
+  gtk_fixed_put (GTK_FIXED (fixedGrid), outputDir, 128, 464);
+  gtk_widget_set_size_request (outputDir, 178, 32);
+  g_object_set (outputDir,
+                "local-only", FALSE,
+                NULL);
+
+  gameListScroll = gtk_scrolled_window_new (NULL, NULL);
+  gtk_widget_set_name (gameListScroll, "gameListScroll");
+  gtk_widget_show (gameListScroll);
+  gtk_fixed_put (GTK_FIXED (fixedGrid), gameListScroll, 0, 104);
+  gtk_widget_set_size_request (gameListScroll, 308, 340);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (gameListScroll), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (gameListScroll), GTK_SHADOW_IN);
+
+  gameList = gtk_tree_view_new ();
+  gtk_widget_set_name (gameList, "gameList");
+  gtk_widget_show (gameList);
+  gtk_container_add (GTK_CONTAINER (gameListScroll), gameList);
+  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (gameList), TRUE);
+
+  compRateLbl = gtk_label_new (_("Compression Rate"));
+  gtk_widget_set_name (compRateLbl, "compRateLbl");
+  gtk_widget_show (compRateLbl);
+  gtk_fixed_put (GTK_FIXED (fixedGrid), compRateLbl, 0, 40);
+  gtk_widget_set_size_request (compRateLbl, 124, 26);
+  gtk_misc_set_alignment (GTK_MISC (compRateLbl), 0, 0.5);
+
+  searchEdit = gtk_entry_new ();
+  gtk_widget_set_name (searchEdit, "searchEdit");
+  gtk_widget_show (searchEdit);
+  gtk_fixed_put (GTK_FIXED (fixedGrid), searchEdit, 64, 72);
+  gtk_widget_set_size_request (searchEdit, 244, 28);
+  gtk_entry_set_invisible_char (GTK_ENTRY (searchEdit), 9679);
+
+  label2 = gtk_label_new (_("Search"));
+  gtk_widget_set_name (label2, "label2");
+  gtk_widget_show (label2);
+  gtk_fixed_put (GTK_FIXED (fixedGrid), label2, 0, 80);
+  gtk_widget_set_size_request (label2, 55, 17);
 
   g_signal_connect ((gpointer) exitBtn, "clicked",
                     G_CALLBACK (on_exitBtn_clicked),
@@ -149,21 +165,26 @@ create_mainWindow (void)
   g_signal_connect ((gpointer) btnGenerate, "clicked",
                     G_CALLBACK (on_btnGenerate_activate),
                     NULL);
+  g_signal_connect ((gpointer) searchEdit, "changed",
+                    G_CALLBACK (on_searchEdit_changed),
+                    NULL);
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (mainWindow, mainWindow, "mainWindow");
   GLADE_HOOKUP_OBJECT (mainWindow, fixedGrid, "fixedGrid");
   GLADE_HOOKUP_OBJECT (mainWindow, compRate, "compRate");
-  GLADE_HOOKUP_OBJECT (mainWindow, compRateLbl, "compRateLbl");
   GLADE_HOOKUP_OBJECT (mainWindow, cdImgLbl, "cdImgLbl");
+  GLADE_HOOKUP_OBJECT (mainWindow, cnvProgress, "cnvProgress");
+  GLADE_HOOKUP_OBJECT (mainWindow, cdImg, "cdImg");
+  GLADE_HOOKUP_OBJECT (mainWindow, exitBtn, "exitBtn");
+  GLADE_HOOKUP_OBJECT (mainWindow, btnGenerate, "btnGenerate");
+  GLADE_HOOKUP_OBJECT (mainWindow, label1, "label1");
+  GLADE_HOOKUP_OBJECT (mainWindow, outputDir, "outputDir");
   GLADE_HOOKUP_OBJECT (mainWindow, gameListScroll, "gameListScroll");
   GLADE_HOOKUP_OBJECT (mainWindow, gameList, "gameList");
-  GLADE_HOOKUP_OBJECT (mainWindow, cnvProgress, "cnvProgress");
-  GLADE_HOOKUP_OBJECT (mainWindow, label1, "label1");
-  GLADE_HOOKUP_OBJECT (mainWindow, exitBtn, "exitBtn");
-  GLADE_HOOKUP_OBJECT (mainWindow, outputDir, "outputDir");
-  GLADE_HOOKUP_OBJECT (mainWindow, cdImg, "cdImg");
-  GLADE_HOOKUP_OBJECT (mainWindow, btnGenerate, "btnGenerate");
+  GLADE_HOOKUP_OBJECT (mainWindow, compRateLbl, "compRateLbl");
+  GLADE_HOOKUP_OBJECT (mainWindow, searchEdit, "searchEdit");
+  GLADE_HOOKUP_OBJECT (mainWindow, label2, "label2");
 
   gtk_window_add_accel_group (GTK_WINDOW (mainWindow), accel_group);
 

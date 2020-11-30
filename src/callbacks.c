@@ -13,22 +13,22 @@ void copyKeysBin(const char* dst, const char* src)
 	int inF, ouF;
 	char line[512];
 	int bytes;
-		
+
 	if((inF = open("data/KEYS.BIN", O_RDONLY, 0755)) == -1) {
 		createError("Error opening KEYS.BIN");
 		return;
 	}
-		
+
 	strcpy(line, dst);
 	strcat(line, "/KEYS.BIN");
 	if((ouF = open(line, O_WRONLY | O_CREAT), 0755) == -1) {
 		createError("Error creating KEYS.BIN");
 		return;
 	}
-		
+
 	while((bytes = read(inF, line, sizeof(line))) > 0)
 		write(ouF, line, bytes);
-		
+
 	close(inF);
 	close(ouF);
 }
@@ -36,7 +36,8 @@ void copyKeysBin(const char* dst, const char* src)
 void createError(const char* message)
 {
 	GtkWidget* error;
-	error = gtk_message_dialog_new(GTK_WINDOW(mainWindow), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, message);
+	//error = gtk_message_dialog_new(GTK_WINDOW(mainWindow), GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, message);
+	error = gtk_message_dialog_new(GTK_WINDOW(mainWindow), GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, message);
 	gtk_dialog_run(GTK_DIALOG(error));
 	gtk_widget_destroy(error);
 }
@@ -57,25 +58,25 @@ void on_btnGenerate_activate(GtkButton *button, gpointer user_data)
 	GtkTreeSelection* listSelection = gtk_tree_view_get_selection(gameList);
 	GtkTreeModel* lModel;
 	GtkTreeIter lIter;
-		
+
 	char* gameCode;
-    char* gameName;
+	char* gameName;
 	int compressionRate = gtk_spin_button_get_value_as_int(compRate);
 	char* isoName = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(lookup_widget(mainWindow, "cdImg")));
 	char* outputDirName = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(lookup_widget(mainWindow, "outputDir")));
-		
+
 	if(!isoName) {
 		createError("Error: No CD Image selected!");
 		return;
 	}
-		
+
 	if(gtk_tree_selection_get_selected(listSelection, &lModel, &lIter))
 		gtk_tree_model_get(lModel, &lIter, COLUMN_GAMECODE, &gameCode, COLUMN_GAMENAME, &gameName, -1);
 	else {
 		createError("Error: No game selected!");
 		return;
 	}
-		
+
 	strcpy(cnvThread.input, isoName);
 	strcpy(cnvThread.output, outputDirName);
 	strcat(cnvThread.output, "/");
@@ -86,13 +87,13 @@ void on_btnGenerate_activate(GtkButton *button, gpointer user_data)
 	strcpy(cnvThread.title, gameName);
 	strcpy(cnvThread.code, gameCode);
 	cnvThread.complevel = compressionRate;
-		
+
 	GError *err1 = NULL;
 	if((pConvertThread = g_thread_create((GThreadFunc)handleThread, (void*)&cnvThread, TRUE, &err1)) == NULL) {
 		createError("Thread creation failed!");
 		g_error_free(err1);
 	}
-		
+
 	g_free(gameCode);
 	g_free(gameName);
 }
@@ -101,3 +102,33 @@ void on_exitBtn_clicked(GtkButton *button, gpointer user_data)
 {
 	gtk_main_quit();
 }
+
+void
+on_searchEdit_changed                  (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+	GtkTreeView* gameList = GTK_TREE_VIEW(lookup_widget(mainWindow, "gameList"));
+	GtkTreeModel* lModel = gtk_tree_view_get_model (gameList);
+	GtkTreeIter lIter;
+	if(!gtk_tree_model_get_iter_first (lModel, &lIter)) return;
+	char* searchtext = gtk_editable_get_chars(editable, 0, -1);
+	size_t l = strlen(searchtext);
+	int donext = 1;
+	do {
+		char* gameCode;
+		char* gameName;
+		gtk_tree_model_get(lModel, &lIter, COLUMN_GAMECODE, &gameCode, COLUMN_GAMENAME, &gameName, -1);
+		if(!strncasecmp(searchtext, gameCode, l) || !strncasecmp(searchtext, gameName, l)) {
+			GtkTreeSelection *sel = gtk_tree_view_get_selection(gameList);
+			gtk_tree_selection_select_iter(sel, &lIter);
+			GtkTreePath *path = gtk_tree_model_get_path(lModel, &lIter);
+			gtk_tree_view_scroll_to_cell(gameList, path, NULL, FALSE, 0.0, 0.0);
+			gtk_tree_path_free(path);
+			donext = 0;
+		}
+		g_free(gameCode);
+		g_free(gameName);
+	} while(donext && gtk_tree_model_iter_next (lModel, &lIter));
+	g_free(searchtext);
+}
+

@@ -22,6 +22,8 @@
   <child>
     <widget class="GtkFixed" id="fixedGrid">
       <property name="border_width">4</property>
+      <property name="width_request">320</property>
+      <property name="height_request">580</property>
       <property name="visible">True</property>
 
       <child>
@@ -40,32 +42,6 @@
 	</widget>
 	<packing>
 	  <property name="x">128</property>
-	  <property name="y">40</property>
-	</packing>
-      </child>
-
-      <child>
-	<widget class="GtkLabel" id="compRateLbl">
-	  <property name="width_request">124</property>
-	  <property name="height_request">26</property>
-	  <property name="visible">True</property>
-	  <property name="label" translatable="yes">Compression Rate</property>
-	  <property name="use_underline">False</property>
-	  <property name="use_markup">False</property>
-	  <property name="justify">GTK_JUSTIFY_LEFT</property>
-	  <property name="wrap">False</property>
-	  <property name="selectable">False</property>
-	  <property name="xalign">0</property>
-	  <property name="yalign">0.5</property>
-	  <property name="xpad">0</property>
-	  <property name="ypad">0</property>
-	  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
-	  <property name="width_chars">-1</property>
-	  <property name="single_line_mode">False</property>
-	  <property name="angle">0</property>
-	</widget>
-	<packing>
-	  <property name="x">0</property>
 	  <property name="y">40</property>
 	</packing>
       </child>
@@ -97,37 +73,6 @@
       </child>
 
       <child>
-	<widget class="GtkScrolledWindow" id="gameListScroll">
-	  <property name="width_request">308</property>
-	  <property name="height_request">204</property>
-	  <property name="visible">True</property>
-	  <property name="can_focus">True</property>
-	  <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-	  <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-	  <property name="shadow_type">GTK_SHADOW_IN</property>
-	  <property name="window_placement">GTK_CORNER_TOP_LEFT</property>
-
-	  <child>
-	    <widget class="GtkTreeView" id="gameList">
-	      <property name="visible">True</property>
-	      <property name="can_focus">True</property>
-	      <property name="headers_visible">True</property>
-	      <property name="rules_hint">True</property>
-	      <property name="reorderable">False</property>
-	      <property name="enable_search">True</property>
-	      <property name="fixed_height_mode">False</property>
-	      <property name="hover_selection">False</property>
-	      <property name="hover_expand">False</property>
-	    </widget>
-	  </child>
-	</widget>
-	<packing>
-	  <property name="x">0</property>
-	  <property name="y">72</property>
-	</packing>
-      </child>
-
-      <child>
 	<widget class="GtkProgressBar" id="cnvProgress">
 	  <property name="width_request">310</property>
 	  <property name="height_request">24</property>
@@ -140,7 +85,62 @@
 	</widget>
 	<packing>
 	  <property name="x">0</property>
-	  <property name="y">324</property>
+	  <property name="y">504</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkFileChooserButton" id="cdImg">
+	  <property name="width_request">178</property>
+	  <property name="height_request">32</property>
+	  <property name="visible">True</property>
+	  <property name="title">Select A CD Image</property>
+	  <property name="action">GTK_FILE_CHOOSER_ACTION_OPEN</property>
+	  <property name="local_only">False</property>
+	  <property name="show_hidden">False</property>
+	  <property name="do_overwrite_confirmation">False</property>
+	  <property name="width_chars">-1</property>
+	</widget>
+	<packing>
+	  <property name="x">128</property>
+	  <property name="y">4</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkButton" id="exitBtn">
+	  <property name="width_request">110</property>
+	  <property name="height_request">36</property>
+	  <property name="visible">True</property>
+	  <property name="can_focus">True</property>
+	  <property name="label">gtk-quit</property>
+	  <property name="use_stock">True</property>
+	  <property name="relief">GTK_RELIEF_NORMAL</property>
+	  <property name="focus_on_click">True</property>
+	  <signal name="clicked" handler="on_exitBtn_clicked" last_modification_time="Fri, 05 Jan 2007 17:56:24 GMT"/>
+	  <accelerator key="Q" modifiers="GDK_MOD1_MASK" signal="clicked"/>
+	</widget>
+	<packing>
+	  <property name="x">0</property>
+	  <property name="y">536</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkButton" id="btnGenerate">
+	  <property name="width_request">110</property>
+	  <property name="height_request">36</property>
+	  <property name="visible">True</property>
+	  <property name="can_focus">True</property>
+	  <property name="label">gtk-convert</property>
+	  <property name="use_stock">True</property>
+	  <property name="relief">GTK_RELIEF_HALF</property>
+	  <property name="focus_on_click">True</property>
+	  <signal name="clicked" handler="on_btnGenerate_activate" last_modification_time="Fri, 05 Jan 2007 17:47:55 GMT"/>
+	</widget>
+	<packing>
+	  <property name="x">200</property>
+	  <property name="y">536</property>
 	</packing>
       </child>
 
@@ -166,26 +166,7 @@
 	</widget>
 	<packing>
 	  <property name="x">0</property>
-	  <property name="y">288</property>
-	</packing>
-      </child>
-
-      <child>
-	<widget class="GtkButton" id="exitBtn">
-	  <property name="width_request">110</property>
-	  <property name="height_request">36</property>
-	  <property name="visible">True</property>
-	  <property name="can_focus">True</property>
-	  <property name="label">gtk-quit</property>
-	  <property name="use_stock">True</property>
-	  <property name="relief">GTK_RELIEF_NORMAL</property>
-	  <property name="focus_on_click">True</property>
-	  <signal name="clicked" handler="on_exitBtn_clicked" last_modification_time="Fri, 05 Jan 2007 17:56:24 GMT"/>
-	  <accelerator key="Q" modifiers="GDK_MOD1_MASK" signal="clicked"/>
-	</widget>
-	<packing>
-	  <property name="x">0</property>
-	  <property name="y">354</property>
+	  <property name="y">464</property>
 	</packing>
       </child>
 
@@ -203,43 +184,111 @@
 	</widget>
 	<packing>
 	  <property name="x">128</property>
-	  <property name="y">284</property>
+	  <property name="y">464</property>
 	</packing>
       </child>
 
       <child>
-	<widget class="GtkFileChooserButton" id="cdImg">
-	  <property name="width_request">178</property>
-	  <property name="height_request">32</property>
-	  <property name="visible">True</property>
-	  <property name="title">Select A CD Image</property>
-	  <property name="action">GTK_FILE_CHOOSER_ACTION_OPEN</property>
-	  <property name="local_only">False</property>
-	  <property name="show_hidden">False</property>
-	  <property name="do_overwrite_confirmation">False</property>
-	  <property name="width_chars">-1</property>
-	</widget>
-	<packing>
-	  <property name="x">128</property>
-	  <property name="y">4</property>
-	</packing>
-      </child>
-
-      <child>
-	<widget class="GtkButton" id="btnGenerate">
-	  <property name="width_request">110</property>
-	  <property name="height_request">36</property>
+	<widget class="GtkScrolledWindow" id="gameListScroll">
+	  <property name="width_request">308</property>
+	  <property name="height_request">340</property>
 	  <property name="visible">True</property>
 	  <property name="can_focus">True</property>
-	  <property name="label">gtk-convert</property>
-	  <property name="use_stock">True</property>
-	  <property name="relief">GTK_RELIEF_HALF</property>
-	  <property name="focus_on_click">True</property>
-	  <signal name="clicked" handler="on_btnGenerate_activate" last_modification_time="Fri, 05 Jan 2007 17:47:55 GMT"/>
+	  <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+	  <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+	  <property name="shadow_type">GTK_SHADOW_IN</property>
+	  <property name="window_placement">GTK_CORNER_TOP_LEFT</property>
+
+	  <child>
+	    <widget class="GtkTreeView" id="gameList">
+	      <property name="visible">True</property>
+	      <property name="can_focus">True</property>
+	      <property name="headers_visible">True</property>
+	      <property name="rules_hint">True</property>
+	      <property name="reorderable">False</property>
+	      <property name="enable_search">True</property>
+	      <property name="fixed_height_mode">False</property>
+	      <property name="hover_selection">False</property>
+	      <property name="hover_expand">False</property>
+	    </widget>
+	  </child>
 	</widget>
 	<packing>
-	  <property name="x">200</property>
-	  <property name="y">354</property>
+	  <property name="x">0</property>
+	  <property name="y">104</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkLabel" id="compRateLbl">
+	  <property name="width_request">124</property>
+	  <property name="height_request">26</property>
+	  <property name="visible">True</property>
+	  <property name="label" translatable="yes">Compression Rate</property>
+	  <property name="use_underline">False</property>
+	  <property name="use_markup">False</property>
+	  <property name="justify">GTK_JUSTIFY_LEFT</property>
+	  <property name="wrap">False</property>
+	  <property name="selectable">False</property>
+	  <property name="xalign">0</property>
+	  <property name="yalign">0.5</property>
+	  <property name="xpad">0</property>
+	  <property name="ypad">0</property>
+	  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+	  <property name="width_chars">-1</property>
+	  <property name="single_line_mode">False</property>
+	  <property name="angle">0</property>
+	</widget>
+	<packing>
+	  <property name="x">0</property>
+	  <property name="y">40</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkEntry" id="searchEdit">
+	  <property name="width_request">244</property>
+	  <property name="height_request">28</property>
+	  <property name="visible">True</property>
+	  <property name="can_focus">True</property>
+	  <property name="editable">True</property>
+	  <property name="visibility">True</property>
+	  <property name="max_length">0</property>
+	  <property name="text" translatable="yes"></property>
+	  <property name="has_frame">True</property>
+	  <property name="invisible_char">●</property>
+	  <property name="activates_default">False</property>
+	  <signal name="changed" handler="on_searchEdit_changed" last_modification_time="Mon, 30 Nov 2020 20:20:11 GMT"/>
+	</widget>
+	<packing>
+	  <property name="x">64</property>
+	  <property name="y">72</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkLabel" id="label2">
+	  <property name="width_request">55</property>
+	  <property name="height_request">17</property>
+	  <property name="visible">True</property>
+	  <property name="label" translatable="yes">Search</property>
+	  <property name="use_underline">False</property>
+	  <property name="use_markup">False</property>
+	  <property name="justify">GTK_JUSTIFY_LEFT</property>
+	  <property name="wrap">False</property>
+	  <property name="selectable">False</property>
+	  <property name="xalign">0.5</property>
+	  <property name="yalign">0.5</property>
+	  <property name="xpad">0</property>
+	  <property name="ypad">0</property>
+	  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
+	  <property name="width_chars">-1</property>
+	  <property name="single_line_mode">False</property>
+	  <property name="angle">0</property>
+	</widget>
+	<packing>
+	  <property name="x">0</property>
+	  <property name="y">80</property>
 	</packing>
       </child>
     </widget>

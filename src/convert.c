@@ -978,16 +978,16 @@ int getsize(FILE *f)
 	return size;
 }
 
-void ErrorExit(char *fmt, ...)
+char* ErrorExit(char *fmt, ...)
 {
 	va_list list;
-	char msg[256];	
-		
+	char msg[256];
+
 	va_start(list, fmt);
 	vsprintf(msg, fmt, list);
 	va_end(list);
-		
-	createError(msg);
+
+	return strdup(msg);
 }
 
 z_stream z;
@@ -1086,7 +1086,7 @@ typedef struct __attribute__((packed))
 	unsigned int dummy[6];
 } IsoIndex;
 
-void convert(char *input, char *output, char *title, char *code, int complevel)
+char *convert(char *input, char *output, char *title, char *code, int complevel)
 {
 	FILE *in, *out, *base, *t;
 	int i, offset, isosize, isorealsize, x;
@@ -1095,8 +1095,7 @@ void convert(char *input, char *output, char *title, char *code, int complevel)
 		
 	in = fopen (input, "rb");
 	if (!in) {
-		ErrorExit("Cannot open %s\n", input);
-		return;
+		return ErrorExit("Cannot open %s\n", input);
 	}
 		
 	isosize = getsize(in);
@@ -1109,14 +1108,12 @@ void convert(char *input, char *output, char *title, char *code, int complevel)
 		
 	base = fopen(BASE, "rb");
 	if (!base) {
-		ErrorExit("Cannot open %s\n", BASE);
-		return;
+		return ErrorExit("Cannot open %s\n", BASE);
 	}
 		
 	out = fopen(output, "wb");
 	if (!out) {
-		ErrorExit("Cannot create %s\n", output);
-		return;
+		return ErrorExit("Cannot create %s\n", output);
 	}
 		
 //	printf("Writing header...\n");
@@ -1124,8 +1121,7 @@ void convert(char *input, char *output, char *title, char *code, int complevel)
 	fread(base_header, 1, 0x28, base);
 		
 	if (base_header[0] != 0x50425000) {
-		ErrorExit("%s is not a PBP file.\n", BASE);
-		return;
+		return("%s is not a PBP file.\n", BASE);
 	}
 		
 	sfo_size = base_header[3] - base_header[2];
@@ -1349,8 +1345,7 @@ void convert(char *input, char *output, char *title, char *code, int complevel)
 			fclose(in);
 			fclose(out);
 			fclose(base);
-			ErrorExit("Cannot alloc memory for indexes!\n");
-			return;
+			return("Cannot alloc memory for indexes!\n");
 		}
 			
 		i = 0;
@@ -1366,8 +1361,7 @@ void convert(char *input, char *output, char *title, char *code, int complevel)
 				fclose(out);
 				fclose(base);
 				free(indexes);
-				ErrorExit("Error in compression!\n");
-				return;
+				return ErrorExit("Error in compression!\n");
 			}
 			memset(&indexes[i], 0, sizeof(IsoIndex));
 			indexes[i].offset = offset;
@@ -1388,8 +1382,7 @@ void convert(char *input, char *output, char *title, char *code, int complevel)
 			fclose(base);
 			free(indexes);
 				
-			ErrorExit("Some error happened.\n");
-			return;
+			return ErrorExit("Some error happened.\n");
 		}
 		x = ftell(out);
 			
@@ -1415,8 +1408,7 @@ void convert(char *input, char *output, char *title, char *code, int complevel)
 	fread(buffer, 1, 8, base);
 		
 	if (memcmp(buffer, "STARTDAT", 8) != 0) {
-		ErrorExit("Cannot find STARTDAT in BASE.PBP\nNot a valid PSX EBOOT.PBP\n");
-		return;
+		return ErrorExit("Cannot find STARTDAT in BASE.PBP\nNot a valid PSX EBOOT.PBP\n");
 	}
 		
 	fseek(base, x, SEEK_SET);
@@ -1441,4 +1433,5 @@ void convert(char *input, char *output, char *title, char *code, int complevel)
 	fclose(in);
 	fclose(out);
 	fclose(base);
+	return NULL;
 }

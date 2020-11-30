@@ -24,3 +24,7 @@ gboolean updateBar(gpointer pData);
 void createError(const char* message);
 
 #endif
+
+void
+on_searchEdit_changed                  (GtkEditable     *editable,
+                                        gpointer         user_data);
