@@ -1,2 +1,6 @@
 *.o
+configure
+config.*
+Makefile
+Makefile.in
 
