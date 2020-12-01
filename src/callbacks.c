@@ -9,19 +9,19 @@
 #include "main.h"
 #include "convert.h"
 
-void copyKeysBin(const char* dst, const char* src)
+int copyKeysBin(const char* dst)
 {
 	int ouF;
 	char line[512];
-	(void) src;
 	snprintf(line, sizeof line, "%s/KEYS.BIN", dst);
 
-	if((ouF = open(line, O_WRONLY | O_CREAT), 0755) == -1) {
+	if((ouF = open(line, O_WRONLY | O_CREAT, 0755)) == -1) {
 		createError("Error creating KEYS.BIN");
-		return;
+		return 0;
 	}
 	write(ouF, "\x4D\x42\x5C\xCE\xA9\x3A\xF2\xC2\x0C\xFB\x1F\xF1\x20\x0B\xBE\x22", 16);
 	close(ouF);
+	return 1;
 }
 
 void createError(const char* message)
@@ -69,11 +69,9 @@ void on_btnGenerate_activate(GtkButton *button, gpointer user_data)
 	}
 
 	strcpy(cnvThread.input, isoName);
-	strcpy(cnvThread.output, outputDirName);
-	strcat(cnvThread.output, "/");
-	strcat(cnvThread.output, gameCode);
+	snprintf(cnvThread.output, sizeof(cnvThread.output), "%s/%s", outputDirName, gameCode);
 	mkdir(cnvThread.output, 0755);
-	copyKeysBin(cnvThread.output, "data/KEYS.BIN");
+	if(!copyKeysBin(cnvThread.output)) return;
 	strcat(cnvThread.output, "/EBOOT.PBP");
 	strcpy(cnvThread.title, gameName);
 	strcpy(cnvThread.code, gameCode);
