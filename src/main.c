@@ -1,4 +1,5 @@
 #include "main.h"
+#include "convert.h"
 
 GtkWidget *mainWindow;
 pbarData progBar;
