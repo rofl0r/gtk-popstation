@@ -15,7 +15,7 @@ static GtkTreeModel* fillData(void)
 
 	if(!dbFile) {
 		createError("Game Database not found!");
-		return;
+		return 0;
 	}
 
 	char codeBuffer[256];
