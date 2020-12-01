@@ -84,6 +84,10 @@ void handleThread(gpointer data)
 
 int main (int argc, char *argv[])
 {
+#ifdef HAVE_LIBX11
+	extern void XInitThreads(void);
+	XInitThreads();
+#endif
 	gtk_set_locale();
 	gtk_init(&argc, &argv);
 
