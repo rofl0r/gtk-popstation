@@ -114,6 +114,13 @@ int main (int argc, char *argv[])
 	GtkFileChooserButton *cdImg = GTK_FILE_CHOOSER_BUTTON(lookup_widget(mainWindow, "cdImg"));
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER(cdImg), isofilter);
 
+	GtkFileFilter* anyfilter = gtk_file_filter_new();
+	gtk_file_filter_add_pattern (anyfilter, "*.*");
+	gtk_file_filter_set_name (anyfilter, "*.*");
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER(cdImg), anyfilter);
+
+	gtk_file_chooser_set_filter (GTK_FILE_CHOOSER(cdImg), isofilter);
+
 	gtk_main();
 	return 0;
 }
