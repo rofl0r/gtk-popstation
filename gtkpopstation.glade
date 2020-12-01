@@ -90,24 +90,6 @@
       </child>
 
       <child>
-	<widget class="GtkFileChooserButton" id="cdImg">
-	  <property name="width_request">178</property>
-	  <property name="height_request">32</property>
-	  <property name="visible">True</property>
-	  <property name="title">Select A CD Image</property>
-	  <property name="action">GTK_FILE_CHOOSER_ACTION_OPEN</property>
-	  <property name="local_only">False</property>
-	  <property name="show_hidden">False</property>
-	  <property name="do_overwrite_confirmation">False</property>
-	  <property name="width_chars">-1</property>
-	</widget>
-	<packing>
-	  <property name="x">128</property>
-	  <property name="y">4</property>
-	</packing>
-      </child>
-
-      <child>
 	<widget class="GtkButton" id="exitBtn">
 	  <property name="width_request">110</property>
 	  <property name="height_request">36</property>
@@ -289,6 +271,25 @@
 	<packing>
 	  <property name="x">0</property>
 	  <property name="y">80</property>
+	</packing>
+      </child>
+
+      <child>
+	<widget class="GtkFileChooserButton" id="cdImg">
+	  <property name="width_request">178</property>
+	  <property name="height_request">32</property>
+	  <property name="visible">True</property>
+	  <property name="title">Select A CD Image</property>
+	  <property name="action">GTK_FILE_CHOOSER_ACTION_OPEN</property>
+	  <property name="local_only">False</property>
+	  <property name="show_hidden">False</property>
+	  <property name="do_overwrite_confirmation">False</property>
+	  <property name="width_chars">-1</property>
+	  <signal name="file_set" handler="on_cdImg_file_set" last_modification_time="Tue, 01 Dec 2020 01:29:12 GMT"/>
+	</widget>
+	<packing>
+	  <property name="x">128</property>
+	  <property name="y">4</property>
 	</packing>
       </child>
     </widget>

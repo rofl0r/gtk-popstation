@@ -28,3 +28,7 @@ void createError(const char* message);
 void
 on_searchEdit_changed                  (GtkEditable     *editable,
                                         gpointer         user_data);
+
+void
+on_cdImg_file_set                      (GtkFileChooserButton *filechooserbutton,
+                                        gpointer         user_data);

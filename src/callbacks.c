@@ -2,6 +2,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <limits.h>
 #include "callbacks.h"
 #include "interface.h"
 #include "support.h"
@@ -120,5 +121,28 @@ on_searchEdit_changed                  (GtkEditable     *editable,
 		g_free(gameName);
 	} while(donext && gtk_tree_model_iter_next (lModel, &lIter));
 	g_free(searchtext);
+}
+
+
+void
+on_cdImg_file_set                      (GtkFileChooserButton *filechooserbutton,
+                                        gpointer         user_data)
+{
+	GtkFileChooserButton *outdirbtn = GTK_FILE_CHOOSER_BUTTON(lookup_widget(mainWindow, "outputDir"));
+	if(!gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(outdirbtn))) {
+		char *isoname = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(lookup_widget(mainWindow, "cdImg")));
+		if(!isoname) return;
+		char path[PATH_MAX], *p;
+		p = strrchr(isoname, '/');
+		if(p) {
+			memcpy(path, isoname, p-isoname);
+			path[p-isoname] = 0;
+		} else {
+			path[0] = '.';
+			path[1] = 0;
+		}
+		strcat(path, "/out");
+		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(outdirbtn), path);
+	}
 }
 

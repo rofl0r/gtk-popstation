@@ -35,7 +35,6 @@ create_mainWindow (void)
   GtkWidget *compRate;
   GtkWidget *cdImgLbl;
   GtkWidget *cnvProgress;
-  GtkWidget *cdImg;
   GtkWidget *exitBtn;
   GtkWidget *btnGenerate;
   GtkWidget *label1;
@@ -45,6 +44,7 @@ create_mainWindow (void)
   GtkWidget *compRateLbl;
   GtkWidget *searchEdit;
   GtkWidget *label2;
+  GtkWidget *cdImg;
   GtkAccelGroup *accel_group;
 
   accel_group = gtk_accel_group_new ();
@@ -83,15 +83,6 @@ create_mainWindow (void)
   gtk_widget_show (cnvProgress);
   gtk_fixed_put (GTK_FIXED (fixedGrid), cnvProgress, 0, 504);
   gtk_widget_set_size_request (cnvProgress, 310, 24);
-
-  cdImg = gtk_file_chooser_button_new ("Select A CD Image", GTK_FILE_CHOOSER_ACTION_OPEN);
-  gtk_widget_set_name (cdImg, "cdImg");
-  gtk_widget_show (cdImg);
-  gtk_fixed_put (GTK_FIXED (fixedGrid), cdImg, 128, 4);
-  gtk_widget_set_size_request (cdImg, 178, 32);
-  g_object_set (cdImg,
-                "local-only", FALSE,
-                NULL);
 
   exitBtn = gtk_button_new_from_stock ("gtk-quit");
   gtk_widget_set_name (exitBtn, "exitBtn");
@@ -159,6 +150,15 @@ create_mainWindow (void)
   gtk_fixed_put (GTK_FIXED (fixedGrid), label2, 0, 80);
   gtk_widget_set_size_request (label2, 55, 17);
 
+  cdImg = gtk_file_chooser_button_new ("Select A CD Image", GTK_FILE_CHOOSER_ACTION_OPEN);
+  gtk_widget_set_name (cdImg, "cdImg");
+  gtk_widget_show (cdImg);
+  gtk_fixed_put (GTK_FIXED (fixedGrid), cdImg, 128, 4);
+  gtk_widget_set_size_request (cdImg, 178, 32);
+  g_object_set (cdImg,
+                "local-only", FALSE,
+                NULL);
+
   g_signal_connect ((gpointer) exitBtn, "clicked",
                     G_CALLBACK (on_exitBtn_clicked),
                     NULL);
@@ -168,6 +168,9 @@ create_mainWindow (void)
   g_signal_connect ((gpointer) searchEdit, "changed",
                     G_CALLBACK (on_searchEdit_changed),
                     NULL);
+  g_signal_connect ((gpointer) cdImg, "file_set",
+                    G_CALLBACK (on_cdImg_file_set),
+                    NULL);
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (mainWindow, mainWindow, "mainWindow");
@@ -175,7 +178,6 @@ create_mainWindow (void)
   GLADE_HOOKUP_OBJECT (mainWindow, compRate, "compRate");
   GLADE_HOOKUP_OBJECT (mainWindow, cdImgLbl, "cdImgLbl");
   GLADE_HOOKUP_OBJECT (mainWindow, cnvProgress, "cnvProgress");
-  GLADE_HOOKUP_OBJECT (mainWindow, cdImg, "cdImg");
   GLADE_HOOKUP_OBJECT (mainWindow, exitBtn, "exitBtn");
   GLADE_HOOKUP_OBJECT (mainWindow, btnGenerate, "btnGenerate");
   GLADE_HOOKUP_OBJECT (mainWindow, label1, "label1");
@@ -185,6 +187,7 @@ create_mainWindow (void)
   GLADE_HOOKUP_OBJECT (mainWindow, compRateLbl, "compRateLbl");
   GLADE_HOOKUP_OBJECT (mainWindow, searchEdit, "searchEdit");
   GLADE_HOOKUP_OBJECT (mainWindow, label2, "label2");
+  GLADE_HOOKUP_OBJECT (mainWindow, cdImg, "cdImg");
 
   gtk_window_add_accel_group (GTK_WINDOW (mainWindow), accel_group);
 
