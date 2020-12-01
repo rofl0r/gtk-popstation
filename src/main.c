@@ -95,6 +95,13 @@ int main (int argc, char *argv[])
 	progBar.pBar = GTK_PROGRESS_BAR(lookup_widget(mainWindow, "cnvProgress"));
 	progBar.timer = g_timeout_add(100, updateBar, &progBar);
 
+	GtkFileFilter* isofilter = gtk_file_filter_new();
+	gtk_file_filter_add_pattern (isofilter, "*.iso");
+	gtk_file_filter_add_pattern (isofilter, "*.bin");
+	gtk_file_filter_set_name (isofilter, "*.iso,*.bin");
+	GtkFileChooserButton *cdImg = GTK_FILE_CHOOSER_BUTTON(lookup_widget(mainWindow, "cdImg"));
+	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER(cdImg), isofilter);
+
 	gtk_main();
 	return 0;
 }
