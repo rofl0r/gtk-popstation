@@ -42,6 +42,56 @@ gboolean updateBar(gpointer pData)
 		gtk_progress_bar_set_fraction(cpBar->pBar, 0.0);
 }
 
+#include <libgen.h>
+#include <errno.h>
+/* mkdir_p, from samba, GPL */
+int mkdir_p(const char *dir, int mode)
+{
+	char t[PATH_MAX];
+	ssize_t len;
+	int ret;
+
+	if (strcmp(dir, "/") == 0) {
+		return 0;
+	}
+
+	if (strcmp(dir, ".") == 0) {
+		return 0;
+	}
+
+	/* Try to create directory */
+	ret = mkdir(dir, mode);
+	/* Succeed if that worked or if it already existed */
+	if (ret == 0 || errno == EEXIST) {
+		return 0;
+	}
+	/* Fail on anything else except ENOENT */
+	if (errno != ENOENT) {
+		return ret;
+	}
+
+	/* Create ancestors */
+	len = strlen(dir);
+	ret = snprintf(t, sizeof(t), "%s", dir);
+	if (ret != len) {
+		errno = ENAMETOOLONG;
+		return -1;
+	}
+
+	ret = mkdir_p(dirname(t), mode);
+	if (ret != 0) {
+		return ret;
+	}
+
+	/* Create directory */
+	ret = mkdir(dir, mode);
+	if ((ret == -1) && (errno == EEXIST)) {
+		ret = 0;
+	}
+
+	return ret;
+}
+
 void on_btnGenerate_activate(GtkButton *button, gpointer user_data)
 {
 	GtkSpinButton* compRate = GTK_SPIN_BUTTON(lookup_widget(mainWindow, "compRate"));
@@ -70,7 +120,10 @@ void on_btnGenerate_activate(GtkButton *button, gpointer user_data)
 
 	strcpy(cnvThread.input, isoName);
 	snprintf(cnvThread.output, sizeof(cnvThread.output), "%s/%s", outputDirName, gameCode);
-	mkdir(cnvThread.output, 0755);
+	if(mkdir_p(cnvThread.output, 0755)) {
+		createError("Error: could'nt create output directory");
+		return;
+	}
 	if(!copyKeysBin(cnvThread.output)) return;
 	strcat(cnvThread.output, "/EBOOT.PBP");
 	strcpy(cnvThread.title, gameName);
