@@ -109,7 +109,8 @@ int main (int argc, char *argv[])
 	GtkFileFilter* isofilter = gtk_file_filter_new();
 	gtk_file_filter_add_pattern (isofilter, "*.iso");
 	gtk_file_filter_add_pattern (isofilter, "*.bin");
-	gtk_file_filter_set_name (isofilter, "*.iso,*.bin");
+	gtk_file_filter_add_pattern (isofilter, "*.img");
+	gtk_file_filter_set_name (isofilter, "*.iso,*.bin,*.img");
 	GtkFileChooserButton *cdImg = GTK_FILE_CHOOSER_BUTTON(lookup_widget(mainWindow, "cdImg"));
 	gtk_file_chooser_add_filter (GTK_FILE_CHOOSER(cdImg), isofilter);
 
