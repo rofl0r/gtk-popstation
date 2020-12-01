@@ -10,26 +10,16 @@
 
 void copyKeysBin(const char* dst, const char* src)
 {
-	int inF, ouF;
+	int ouF;
 	char line[512];
-	int bytes;
+	(void) src;
+	snprintf(line, sizeof line, "%s/KEYS.BIN", dst);
 
-	if((inF = open("data/KEYS.BIN", O_RDONLY, 0755)) == -1) {
-		createError("Error opening KEYS.BIN");
-		return;
-	}
-
-	strcpy(line, dst);
-	strcat(line, "/KEYS.BIN");
 	if((ouF = open(line, O_WRONLY | O_CREAT), 0755) == -1) {
 		createError("Error creating KEYS.BIN");
 		return;
 	}
-
-	while((bytes = read(inF, line, sizeof(line))) > 0)
-		write(ouF, line, bytes);
-
-	close(inF);
+	write(ouF, "\x4D\x42\x5C\xCE\xA9\x3A\xF2\xC2\x0C\xFB\x1F\xF1\x20\x0B\xBE\x22", 16);
 	close(ouF);
 }
 
