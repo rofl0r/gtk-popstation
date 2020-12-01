@@ -6,12 +6,18 @@ pbarData progBar;
 threadHandle cnvThread;
 GThread* pConvertThread;
 
+extern const char _binary_data_psx_db_start[];
+extern const char _binary_data_psx_db_end[];
+
 static GtkTreeModel* fillData(void)
 {
 	GtkListStore* store = gtk_list_store_new(COLUMN_SIZE, G_TYPE_STRING, G_TYPE_STRING);
 	GtkTreeIter iter;
 
-	FILE* dbFile = fopen("data/psx.db", "rt");
+	FILE* dbFile = fopen("data/psx.db", "r");
+
+	if(!dbFile)
+		dbFile = fmemopen(_binary_data_psx_db_start, _binary_data_psx_db_end-_binary_data_psx_db_start, "r");
 
 	if(!dbFile) {
 		createError("Game Database not found!");

@@ -1067,6 +1067,9 @@ void SetSFOTitle(char *sfo, char *title)
 
 #define BASE "data/BASE.PBP"
 
+extern const unsigned char _binary_data_BASE_PBP_start[];
+extern const unsigned char _binary_data_BASE_PBP_end[];
+
 char buffer[1*1048576];
 char buffer2[0x9300];
 
@@ -1107,6 +1110,7 @@ char *convert(char *input, char *output, char *title, char *code, int complevel)
 	//printf("isosize, isorealsize %08X  %08X\n", isosize, isorealsize);
 
 	base = fopen(BASE, "rb");
+	if (!base) base = fmemopen(_binary_data_BASE_PBP_start, _binary_data_BASE_PBP_end-_binary_data_BASE_PBP_start, "rb");
 	if (!base) {
 		return ErrorExit("Cannot open %s\n", BASE);
 	}
