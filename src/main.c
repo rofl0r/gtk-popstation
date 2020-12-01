@@ -9,19 +9,19 @@ static GtkTreeModel* fillData(void)
 {
 	GtkListStore* store = gtk_list_store_new(COLUMN_SIZE, G_TYPE_STRING, G_TYPE_STRING);
 	GtkTreeIter iter;
-		
+
 	FILE* dbFile = fopen("data/psx.db", "rt");
-		
+
 	if(!dbFile) {
 		createError("Game Database not found!");
 		return;
 	}
-		
+
 	char codeBuffer[256];
 	char nameBuffer[256];
 	int bPos = 0;
 	char curChar = 0;
-		
+
 	while(1) {
 		bPos = 0;
 		curChar = fgetc(dbFile);
@@ -32,7 +32,7 @@ static GtkTreeModel* fillData(void)
 			curChar = fgetc(dbFile);
 		}
 		codeBuffer[bPos] = 0;
-		bPos = 0; 
+		bPos = 0;
 		curChar = fgetc(dbFile);
 		while(curChar != '\n') {
 			nameBuffer[bPos++] = curChar;
@@ -41,22 +41,22 @@ static GtkTreeModel* fillData(void)
 		nameBuffer[bPos] = 0;
 		gtk_list_store_append(store, &iter);
 		gtk_list_store_set(store, &iter, COLUMN_GAMECODE, codeBuffer, COLUMN_GAMENAME, nameBuffer, -1);
- 	}	
-		
+	}
+
 	fclose(dbFile);
-		
+
 	return GTK_TREE_MODEL(store);
 }
 
 void listFillGames(void)
 {
 	GtkTreeView* gameList = GTK_TREE_VIEW(lookup_widget(mainWindow, "gameList"));
-		
+
 	GtkCellRenderer* renderer = gtk_cell_renderer_text_new();
 	gtk_tree_view_insert_column_with_attributes(gameList, 0, "Code", renderer, "text", COLUMN_GAMECODE, NULL);
 	gtk_tree_view_insert_column_with_attributes(gameList, -1, "Name", renderer, "text", COLUMN_GAMENAME, NULL);
 	gtk_tree_view_set_search_column(gameList, COLUMN_GAMENAME);
-		
+
 	GtkTreeModel* model = fillData();
 	gtk_tree_view_set_model(gameList, model);
 	g_object_unref(model);
@@ -79,22 +79,22 @@ int main (int argc, char *argv[])
 {
 	gtk_set_locale();
 	gtk_init(&argc, &argv);
-		
+
 	g_thread_init(NULL);
-	gdk_threads_init(); 
-		
+	gdk_threads_init();
+
 	mainWindow = create_mainWindow();
 	gtk_widget_show(mainWindow);
-		
+
 	g_signal_connect(G_OBJECT(mainWindow), "destroy", G_CALLBACK(gtk_main_quit), NULL);
-	g_signal_connect(G_OBJECT(mainWindow), "delete_event", G_CALLBACK(gtk_main_quit), NULL);		
-		
+	g_signal_connect(G_OBJECT(mainWindow), "delete_event", G_CALLBACK(gtk_main_quit), NULL);
+
 	listFillGames();
-		
+
 	progBar.isJob = FALSE;
 	progBar.pBar = GTK_PROGRESS_BAR(lookup_widget(mainWindow, "cnvProgress"));
 	progBar.timer = g_timeout_add(100, updateBar, &progBar);
-		
+
 	gtk_main();
 	return 0;
 }
